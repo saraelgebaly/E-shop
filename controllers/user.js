@@ -2,12 +2,12 @@ const userModel = require('../models/user');
 const asyncWrapper = require('../middlewares/asyncWrapper')
 const appError = require('../utils/appError');
 const bcrypt = require('bcryptjs')
-const jwb = require('jsonwebtoken')
+const jwb = require('sendwebtoken')
 const generateJWT = require('../utils/generateJWT')
 
 const getUsers = asyncWrapper(async (req, res) => {
     const users = await userModel.find().select('-password')
-    res.json({message: "Got successfully", users: users})
+    res.send({message: "Got successfully", users: users})
 })
 const register = asyncWrapper( async (req, res , next) => {
     const {name, email, password, phone, role, street, apartment, zip, city,country} = req.body
@@ -40,7 +40,7 @@ const register = asyncWrapper( async (req, res , next) => {
     const error = appError.create("user cannot be created", 500)
         return next(error)
    }
-    res.status(201).json({message:"User added successfully",user:user});
+    res.status(201).send({message:"User added successfully",user:user});
 }
 )
 const login = asyncWrapper( async(req, res, next) => {
@@ -57,7 +57,7 @@ const login = asyncWrapper( async(req, res, next) => {
      const matchedPassword = await bcrypt.compare(password, user.password)
      if(user && matchedPassword ){
         const token = await generateJWT({ id: user._id,role:user.role})
-        return res.json({ data: {token}}); 
+        return res.send({ data: {token}}); 
 
      }
      else{
@@ -70,7 +70,7 @@ const login = asyncWrapper( async(req, res, next) => {
 const deleteUser = asyncWrapper (async (req, res)=>{
    if(req.user.role === 'Admin'){
     await userModel.deleteOne(req.params._id);
-    res.json({message:'User deleted successully',data:null});
+    res.send({message:'User deleted successully',data:null});
    }
    else{
     const error = appError.create("You are not authorized", 403);

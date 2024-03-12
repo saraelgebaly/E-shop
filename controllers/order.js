@@ -10,7 +10,7 @@ const getOrders = asyncWrapper(async (req, res,next) => {
     const error = appError.create("Not found Orders",500);
     return next(error);
   }
-  res.status(200).json({ message: "Got Successfully", orders: orders });
+  res.status(200).send({ message: "Got Successfully", orders: orders });
 });
 const addOrder = asyncWrapper(async (req, res, next) => {
   const orderItemsIds = Promise.all(
@@ -46,7 +46,7 @@ const addOrder = asyncWrapper(async (req, res, next) => {
   });
   order = await order.save();
 
-  res.status(201).json({ message: "Added Successfully", order: order });
+  res.status(201).send({ message: "Added Successfully", order: order });
 });
 const getOrder = asyncWrapper(async (req, res, next) => {
   const id = req.params.id;
@@ -61,7 +61,7 @@ const getOrder = asyncWrapper(async (req, res, next) => {
     const error = appError.create("The Order cannot be found", 404);
     return next(error);
   }
-  res.status(200).json({ message: "Got Successfully", order: order });
+  res.status(200).send({ message: "Got Successfully", order: order });
 });
 const updateOrder = asyncWrapper(async (req, res, next) => {
   const id = req.params.id;
@@ -77,7 +77,7 @@ const updateOrder = asyncWrapper(async (req, res, next) => {
       return next(error);
     }
 
-  res.status(200).json({ message: "Updated Successfully", order: order });
+  res.status(200).send({ message: "Updated Successfully", order: order });
 });
 const deleteOrder = asyncWrapper(async (req, res, next) => {
   const id = req.params.id;
@@ -87,7 +87,7 @@ const deleteOrder = asyncWrapper(async (req, res, next) => {
   }
   const order = await orderModel.findByIdAndDelete({ _id: id });
   if (order) {
-    res.status(200).json({ message: "deleted Successfully", order: null });
+    res.status(200).send({ message: "deleted Successfully", order: null });
   } else {
     const error = appError.create("The Order cannot be found to delete", 500);
     return next(error);
@@ -103,7 +103,7 @@ const getUserOrders = asyncWrapper( async (req, res, next) =>{
     const error  = appError.create('Cannot get user orders', 404)
     return next(error)
   } 
-  res.json({userOrders: userOrders})
+  res.send({userOrders: userOrders})
 });
 const getTotalSales = asyncWrapper (async (req, res, next) => {
   const totalSales = await orderModel.aggregate([
@@ -113,7 +113,7 @@ const getTotalSales = asyncWrapper (async (req, res, next) => {
     const error = appError.create("The order sales cannot be generated", 400);
     return next(error);
   }
-  res.json({message:'Got Successfully' ,totalSales: totalSales.pop().totalSales})
+  res.send({message:'Got Successfully' ,totalSales: totalSales.pop().totalSales})
 })
 module.exports = {
   getOrders,

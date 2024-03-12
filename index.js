@@ -1,8 +1,13 @@
+
+const bodyParser=require('body-parser')
+
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config()
 
 const app = express();
+app.use(bodyParser.json())
+
 const mongoose = require('mongoose');
 const { message } = require('./utils/appError');
 const url = process.env.url
@@ -12,7 +17,6 @@ mongoose.connect(url).then(()=>{
 
 
 app.use(cors());
-app.use(express.json()) 
 app.use('/public/uploads', express.static(__dirname + '/public/uploads'));
 
 const productRouter = require('./routes/product') 

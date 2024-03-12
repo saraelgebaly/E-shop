@@ -17,7 +17,7 @@ const getProducts = asyncWrapper(async (req, res) => {
     const error = appError.create("Not found products",500);
     return next(error);
   }
-  res.status(200).json({ message: "Got Successfully", products: products });
+  res.status(200).send({ message: "Got Successfully", products: products });
 });
 const addProduct = asyncWrapper(  async (req, res, next) => {
   if(req.user.role === 'Admin'){
@@ -50,7 +50,7 @@ const addProduct = asyncWrapper(  async (req, res, next) => {
     product = await product.save();
     
   
-    res.status(201).json({ message: "Added Successfully", product: product });
+    res.status(201).send({ message: "Added Successfully", product: product });
   }
   else{
     const error = appError.create("You are not authorized", 403);
@@ -69,7 +69,7 @@ const getProduct = asyncWrapper(async (req, res, next) => {
     const error = appError.create("The Product cannot be found", 404);
     return next(error);
   }
-  res.status(200).json({ message: "Got Successfully", product: product });
+  res.status(200).send({ message: "Got Successfully", product: product });
 });
 const updateProduct = asyncWrapper(async (req, res, next) => {
   const id = req.params.id;
@@ -91,7 +91,7 @@ const updateProduct = asyncWrapper(async (req, res, next) => {
       return next(error);
     }
   
-    res.status(200).json({ message: "Updated Successfully", product: product });
+    res.status(200).send({ message: "Updated Successfully", product: product });
   }
   else{
     const error = appError.create("You are not authorized", 403);
@@ -107,7 +107,7 @@ const deleteProduct = asyncWrapper(async (req, res, next) => {
   if(req.user.role === 'Admin'){
     const product = await productModel.findByIdAndDelete({ _id: id });
   if (product) {
-    res.status(200).json({ message: "deleted Successfully", product: null });
+    res.status(200).send({ message: "deleted Successfully", product: null });
   } else {
     const error = appError.create("The Product cannot be found to delete", 500);
     return next(error);
@@ -125,7 +125,7 @@ if(!products){
   const error = appError.create("Failed to count", 500);
     return next(error);
 }
- res.json({products: products})
+ res.send({products: products})
 }
 const updateImagesGallery = asyncWrapper(async (req, res, next) => {
   const id = req.params.id;
@@ -153,7 +153,7 @@ const updateImagesGallery = asyncWrapper(async (req, res, next) => {
     const error = appError.create("the gallery cannot be updated!", 500);
       return next(error);
   }
-  res.json({ product: product , message:"Updated successfully"})
+  res.send({ product: product , message:"Updated successfully"})
   }else{
     const error = appError.create("You are not authorized", 403);
     return next(error);  

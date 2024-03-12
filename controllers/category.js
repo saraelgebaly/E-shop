@@ -9,7 +9,7 @@ const getCategories = asyncWrapper(async (req, res) => {
     const error = appError.create("Not found categories", 500);
     return next(error);
   }
-  res.status(200).json({ message: "Got Successfully", categories: categories });
+  res.status(200).send({ message: "Got Successfully", categories: categories });
 });
 const addCategory = asyncWrapper(async (req, res, next) => {
   if (req.user.role === "Admin") {
@@ -20,7 +20,7 @@ const addCategory = asyncWrapper(async (req, res, next) => {
     });
     category = await category.save();
 
-    res.status(201).json({ message: "Added Successfully", category: category });
+    res.status(201).send({ message: "Added Successfully", category: category });
   } else {
     const error = appError.create("You are not authorized", 403);
     return next(error);
@@ -38,7 +38,7 @@ const getCategory = asyncWrapper(async (req, res, next) => {
     const error = appError.create("The category cannot be found", 404);
     return next(error);
   }
-  res.status(200).json({ message: "Got Successfully", category: category });
+  res.status(200).send({ message: "Got Successfully", category: category });
 });
 const updateCategory = asyncWrapper(async (req, res, next) => {
   const id = req.params.id;
@@ -62,7 +62,7 @@ const updateCategory = asyncWrapper(async (req, res, next) => {
 
     res
       .status(200)
-      .json({ message: "Updated Successfully", category: category });
+      .send({ message: "Updated Successfully", category: category });
   } else {
     const error = appError.create("You are not authorized", 403);
     return next(error);
@@ -77,7 +77,7 @@ const deleteCategory = asyncWrapper(async (req, res, next) => {
   if (req.user.role === "Admin") {
     const category = await categoryModel.findByIdAndDelete({ _id: id });
     if (category) {
-      res.status(200).json({ message: "deleted Successfully", category: null });
+      res.status(200).send({ message: "deleted Successfully", category: null });
     } else {
       const error = appError.create(
         "The category cannot be found to delete",
