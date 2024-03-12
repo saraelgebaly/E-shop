@@ -2,7 +2,7 @@ const userModel = require('../models/user');
 const asyncWrapper = require('../middlewares/asyncWrapper')
 const appError = require('../utils/appError');
 const bcrypt = require('bcryptjs')
-const jwb = require('sendwebtoken')
+const jwb = require('jsonwebtoken')
 const generateJWT = require('../utils/generateJWT')
 
 const getUsers = asyncWrapper(async (req, res) => {
